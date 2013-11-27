@@ -4,7 +4,7 @@
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
-  <extension library="default.py" point="xbmc.python.script">
+  <extension library="default.py" point="xbmc.python.library">
   	<provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
