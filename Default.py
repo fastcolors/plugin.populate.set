@@ -30,7 +30,7 @@ else:
     import json as simplejson
 
 line = sys.argv[0]
-title = line.replace("plugin://plugin.populate.set/,", "", 1);
+title = line.replace("plugin://script.populate.sets/,", "", 1);
 
 print '----------------------'
 print '----------------------'
