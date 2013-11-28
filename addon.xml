@@ -2,11 +2,9 @@
 <addon id="script.populate.set" name="Populate Sets" provider-name="Martijn" version="0.0.1">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.simplejson" version="2.0.10"/>
+    <import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
-  <extension library="default.py" point="xbmc.python.script">
-  	<provides>executables</provides>
-  </extension>
+  <extension point="xbmc.python.library" library="default.py"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Populate Set Info</summary>
     <description lang="en">the plugin fills a list with the content of the selected MovieSet</description>
