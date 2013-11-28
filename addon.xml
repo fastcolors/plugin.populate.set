@@ -1,11 +1,20 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<<<<<<< HEAD
 <addon id="script.populate.sets" name="Populate Sets" provider-name="Martijn Kaijser" version="0.0.1">
+=======
+<addon id="script.populate.set" name="Populate Sets" provider-name="fastcolors" version="0.0.1">
+>>>>>>> frodo
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
+<<<<<<< HEAD
   <extension library="default.py" point="xbmc.python.library">
   	<provides>video</provides>
+=======
+  <extension library="default.py" point="xbmc.python.script">
+  	<provides>executables</provides>
+>>>>>>> frodo
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Populate Set Info</summary>
