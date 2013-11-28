@@ -62,12 +62,5 @@ if json_query.has_key('result') and json_query['result'].has_key('movies'):
             WINDOW.setProperty("SetItem.%d.director"    % (count), " / ".join(item['director']))
     
     WINDOW.setProperty("SetItem.numitems"    , str(count))
-    b = datetime.datetime.now()
-    c = b - a
-    print '---------------------------------------'
-    print '---------------------------------------'
-    print 'THIS QUERY TOOK'
-    print c
-    print '---------------------------------------'
-    print '---------------------------------------'
+
 del json_query
