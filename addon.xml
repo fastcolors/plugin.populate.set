@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
-<addon id="script.populate.set" name="Populate Sets" provider-name="FastColors" version="0.0.1">
+<addon id="script.populate.set" name="Populate Sets" provider-name="FastColors" version="0.1.1">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
@@ -10,6 +10,11 @@
     <description lang="en">the plugin fills a list with the content of the selected MovieSet</description>
     <disclaimer lang="en">needs support in individual Skins to be used.</disclaimer>
     <platform>all</platform>
-    <language />
+    <language/>
+      <license>GPL2</license>
+      <forum>-</forum>
+      <website>-</website>
+      <source>https://github.com/fastcolors/script.populate.set</source>
+      <email>-</email>
   </extension>
 </addon>
