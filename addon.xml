@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
-<addon id="script.sio2x.recommended.tv" name="SiO2x_Recommended TV shelf" provider-name="FastColors" version="0.0.1">
+<addon id="service.sio2x.tvshelf" name="Recommended Episodes Sio2x" provider-name="FastColors" version="0.0.1">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
   <extension point="xbmc.python.library" library="default.py"/>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Populate Shelf Recommended</summary>
+    <summary lang="en">Fill recommended Episodes in SiO2-X skin</summary>
     <description lang="en"></description>
     <disclaimer lang="en"></disclaimer>
     <platform>all</platform>
