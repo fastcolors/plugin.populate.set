@@ -5,16 +5,11 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import random
-import urllib
 
 if sys.version_info < (2, 7):
     import simplejson
 else:
     import json as simplejson
-
-line = sys.argv[0]
-title = line.replace("plugin://script.populate.set/,", "", 1)
 
 __addon__        = xbmcaddon.Addon()
 __addonversion__ = __addon__.getAddonInfo('version')
@@ -22,74 +17,47 @@ __addonid__      = __addon__.getAddonInfo('id')
 __addonname__    = __addon__.getAddonInfo('name')
 __localize__    = __addon__.getLocalizedString
 
+full_liz = list()
+
 def log(txt):
     message = '%s: %s' % (__addonname__, txt.encode('ascii', 'ignore'))
     xbmc.log(msg=message, level=xbmc.LOGDEBUG)
 
 
-def fetch_movies():
+def fetch_episodes():
     if not xbmc.abortRequested:
-        json_string = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"field": "set", "operator": "is", "value": "' +title+'"}, "limits": { "start" : 0, "end": 2147483647 },  "properties" : ["title", "fanart", "originaltitle", "studio", "trailer", "director", "year", "genre", "country", "tagline", "plot", "runtime", "file", "plotoutline", "rating", "resume", "art", "streamdetails", "set", "setid", "mpaa", "playcount", "lastplayed"], "sort": { "order": "ascending", "method": "title"} }, "id": "1"}'
-        json_query = xbmc.executeJSONRPC('%s' %json_string )
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": {"properties": ["title", "studio", "mpaa", "file", "art"], "sort": {"order": "descending", "method": "lastplayed"}, "filter": {"field": "inprogress", "operator": "true", "value": ""}, "limits": {"end": 24}}, "id": 1}')
         json_query = unicode(json_query, 'utf-8', errors='ignore')
         json_query = simplejson.loads(json_query)
-        if json_query.has_key('result') and json_query['result'].has_key('movies'):
-            for item in json_query['result']['movies']:
-                if (item['resume']['position'] and item['resume']['total']) > 0:
-                    resume = "true"
-                    played = '%s%%'%int((float(item['resume']['position']) / float(item['resume']['total'])) * 100)
-                else:
-                    resume = "false"
-                    played = '0%'
-                if item['playcount'] >= 1:
-                    watched = "true"
-                else:
-                    watched = "false"
-                plot = item['plot']
-                art = item['art']
-                path = media_path(item['file'])
+        print json_query
+        if json_query.has_key('result') and json_query['result'].has_key('tvshows'):
 
-                play = 'XBMC.RunScript(' + __addonid__ + ',movieid=' + str(item.get('movieid')) + ')'
+            for item in json_query['result']['tvshows']:
+                json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "dateadded"], "sort": {"method": "episode"}, "filter": {"field": "playcount", "operator": "is", "value": "0"}, "limits": {"end": 1}}, "id": 1}' %item['tvshowid'])
+                json_query2 = unicode(json_query2, 'utf-8', errors='ignore')
+                json_query2 = simplejson.loads(json_query2)
+                if json_query2.has_key('result') and json_query2['result'].has_key('episodes'):
+                    for item2 in json_query2['result']['episodes']:
+                        # create a list item
+                        liz = xbmcgui.ListItem(item2['title'])
+                        liz.setInfo( type="Video", infoLabels={ "Title": item2['title'] })
+                        liz.setInfo( type="Video", infoLabels={ "Episode": item2['episode'] })
+                        liz.setInfo( type="Video", infoLabels={ "Season": item2['season'] })
+                        liz.setInfo( type="Video", infoLabels={ "TVshowTitle": item2['showtitle'] })
+                        liz.setInfo( type="Video", infoLabels={ "Rating": str(round(float(item2['rating']),1)) })
+                        liz.setInfo( type="Video", infoLabels={ "MPAA": item['mpaa'] })
 
+                        liz.setProperty("resumetime", str(item2['resume']['position']))
+                        liz.setProperty("totaltime", str(item2['resume']['total']))
+                        liz.setArt(item2['art'])
+                        liz.setThumbnailImage(item2['art'].get('thumb',''))
+                        liz.setIconImage('DefaultTVShows.png')
 
-                # create a list item
-                liz = xbmcgui.ListItem(item['title'])
-                liz.setInfo( type="Video", infoLabels={ "Title": item['title']})
-                liz.setInfo( type="Video", infoLabels={ "Year": item['year']})
-                liz.setInfo( type="Video", infoLabels={"Duration": item['runtime']/60})
-                liz.setInfo( type="Video", infoLabels={ "Genre": " / ".join(item['genre'])})
-                liz.setInfo( type="Video", infoLabels={ "Rating": str(float(item['rating']))})
-                liz.setInfo( type="Video", infoLabels={ "MPAA": item['mpaa']})
-                liz.setInfo( type="Video", infoLabels={ "Director": " / ".join(item['director'])})
-                liz.setProperty("resumetime", str(item['resume']['position']))
-                liz.setProperty("totaltime", str(item['resume']['total']))
-
-                liz.setThumbnailImage(art.get('poster', ''))
-
-                liz.setProperty("fanart_image", art.get('fanart', ''))
-
-                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=item['file'],listitem=liz,isFolder=False)
-        del json_query
+                        full_liz.append((item2['file'], liz, False))
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=item2['file'],listitem=liz,isFolder=False)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
-
-def media_path(path):
-    # Check for stacked movies
-    try:
-        path = os.path.split(path)[0].rsplit(' , ', 1)[1].replace(",,",",")
-    except:
-        path = os.path.split(path)[0]
-    # Fixes problems with rared movies and multipath
-    if path.startswith("rar://"):
-        path = [os.path.split(urllib.url2pathname(path.replace("rar://","")))[0]]
-    elif path.startswith("multipath://"):
-        temp_path = path.replace("multipath://","").split('%2f/')
-        path = []
-        for item in temp_path:
-            path.append(urllib.url2pathname(item))
-    else:
-        path = [path]
-    return path[0]
+        del json_query
 
 log('script version %s started' % __addonversion__)
-fetch_movies()
+fetch_episodes()
 log('script version %s stopped' % __addonversion__)

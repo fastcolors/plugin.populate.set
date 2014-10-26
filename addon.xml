@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
-<addon id="script.populate.set" name="Populate Sets" provider-name="FastColors" version="0.1.1">
+<addon id="script.sio2x.recommended.tv" name="SiO2x_Recommended TV shelf" provider-name="FastColors" version="0.0.1">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
   <extension point="xbmc.python.library" library="default.py"/>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Populate Set Info</summary>
-    <description lang="en">the plugin fills a list with the content of the selected MovieSet</description>
-    <disclaimer lang="en">needs support in individual Skins to be used.</disclaimer>
+    <summary lang="en">Populate Shelf Recommended</summary>
+    <description lang="en"></description>
+    <disclaimer lang="en"></disclaimer>
     <platform>all</platform>
     <language/>
       <license>GPL2</license>
       <forum>-</forum>
       <website>-</website>
-      <source>https://github.com/fastcolors/script.populate.set</source>
+      <source>https://github.com/fastcolors/script.sio2x.recommended.tv</source>
       <email>-</email>
   </extension>
 </addon>
