@@ -1,4 +1,4 @@
-script.sio2x.recommended.tv
+service.sio2x.tvshelf
 ===================
 
 
